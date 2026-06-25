@@ -1,0 +1,67 @@
+.todo-input-row {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.todo-filters {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.todo-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.todo-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  margin-bottom: 0.5rem;
+  background: rgba(10, 10, 20, 0.4);
+  transition: border-color 0.2s;
+}
+
+.todo-item:hover {
+  border-color: var(--border-hover);
+}
+
+.todo-label {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: pointer;
+  flex: 1;
+}
+
+.todo-label input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--accent-from);
+}
+
+.todo-done span {
+  text-decoration: line-through;
+  color: var(--text-muted);
+}
+
+.todo-empty {
+  text-align: center;
+  color: var(--text-muted);
+  padding: 2rem;
+  border: 1px dashed var(--border);
+  border-radius: var(--radius);
+}
+
+.todo-remaining {
+  margin-top: 1rem;
+  margin-bottom: 0;
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
