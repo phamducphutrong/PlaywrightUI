@@ -12,11 +12,11 @@ interface Toast {
 
 let toastId = 0
 
-const alertConfig: Record<AlertType, { label: string; testId: string }> = {
-  success: { label: 'Success Alert', testId: 'show-success' },
-  warning: { label: 'Warning Alert', testId: 'show-warning' },
-  error: { label: 'Error Alert', testId: 'show-error' },
-  info: { label: 'Info Alert', testId: 'show-info' },
+const alertConfig: Record<AlertType, { label: string }> = {
+  success: { label: 'Success Alert' },
+  warning: { label: 'Warning Alert' },
+  error: { label: 'Error Alert' },
+  info: { label: 'Info Alert' },
 }
 
 export default function AlertsPage() {
@@ -43,7 +43,7 @@ export default function AlertsPage() {
   }
 
   return (
-    <div className="page" data-testid="alerts-page">
+    <div className="page">
       <header className="page-header">
         <h1>Alerts & Toast</h1>
         <p>Luyện assert thông báo, chờ toast xuất hiện và biến mất</p>
@@ -58,7 +58,6 @@ export default function AlertsPage() {
               type="button"
               className={`btn btn-sm alert-btn alert-btn-${type}`}
               onClick={() => setInlineAlert(type)}
-              data-testid={alertConfig[type].testId}
             >
               {alertConfig[type].label}
             </button>
@@ -66,18 +65,13 @@ export default function AlertsPage() {
         </div>
 
         {inlineAlert && (
-          <div
-            className={`inline-alert inline-alert-${inlineAlert}`}
-            role="alert"
-            data-testid={`inline-alert-${inlineAlert}`}
-          >
+          <div className={`inline-alert inline-alert-${inlineAlert}`} role="alert">
             <span>{messages[inlineAlert]}</span>
             <button
               type="button"
               className="alert-dismiss"
               onClick={() => setInlineAlert(null)}
-              data-testid="dismiss-inline-alert"
-              aria-label="Đóng"
+              aria-label="Đóng thông báo"
             >
               ✕
             </button>
@@ -92,7 +86,6 @@ export default function AlertsPage() {
             type="button"
             className="btn btn-primary"
             onClick={() => addToast('success', 'Toast: Lưu thành công!')}
-            data-testid="show-toast-success"
           >
             Hiện Toast Success
           </button>
@@ -100,28 +93,25 @@ export default function AlertsPage() {
             type="button"
             className="btn btn-secondary"
             onClick={() => addToast('info', 'Toast: Có tin nhắn mới')}
-            data-testid="show-toast-info"
           >
             Hiện Toast Info
           </button>
         </div>
       </div>
 
-      <div className="toast-container" data-testid="toast-container">
+      <div className="toast-container" aria-live="polite" aria-label="Thông báo toast">
         {toasts.map((toast) => (
           <div
             key={toast.id}
             className={`toast toast-${toast.type}`}
             role="status"
-            data-testid={`toast-${toast.id}`}
           >
-            <span data-testid={`toast-message-${toast.id}`}>{toast.message}</span>
+            <span>{toast.message}</span>
             <button
               type="button"
               className="alert-dismiss"
               onClick={() => removeToast(toast.id)}
-              data-testid={`toast-close-${toast.id}`}
-              aria-label="Đóng"
+              aria-label="Đóng toast"
             >
               ✕
             </button>

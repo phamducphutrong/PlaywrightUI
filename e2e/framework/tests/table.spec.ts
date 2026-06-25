@@ -28,4 +28,8 @@ test.describe('Bảng dữ liệu', () => {
     await tablePage.sortByName()
     await tablePage.expectFirstRowContains(tableData.sortDescFirstName)
   })
+
+  test('đọc ô bằng XPath — phương án cuối', async ({ tablePage }) => {
+    await tablePage.expectFirstNameByXPath(tableData.sortAscFirstName)
+  })
 })

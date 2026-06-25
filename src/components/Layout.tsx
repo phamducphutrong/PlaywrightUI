@@ -2,29 +2,31 @@ import { NavLink, Outlet } from 'react-router-dom'
 import './Layout.css'
 
 const navItems = [
-  { to: '/', label: 'Trang chủ', testId: 'nav-home' },
-  { to: '/login', label: 'Đăng nhập', testId: 'nav-login' },
-  { to: '/forms', label: 'Form', testId: 'nav-forms' },
-  { to: '/buttons', label: 'Buttons', testId: 'nav-buttons' },
-  { to: '/todo', label: 'Todo List', testId: 'nav-todo' },
-  { to: '/table', label: 'Bảng dữ liệu', testId: 'nav-table' },
-  { to: '/modal', label: 'Modal', testId: 'nav-modal' },
-  { to: '/alerts', label: 'Alerts', testId: 'nav-alerts' },
+  { to: '/', label: 'Trang chủ' },
+  { to: '/login', label: 'Đăng nhập' },
+  { to: '/forms', label: 'Form' },
+  { to: '/buttons', label: 'Buttons' },
+  { to: '/todo', label: 'Todo List' },
+  { to: '/table', label: 'Bảng dữ liệu' },
+  { to: '/modal', label: 'Modal' },
+  { to: '/alerts', label: 'Alerts' },
 ]
 
 export default function Layout() {
   return (
-    <div className="layout" data-testid="app-layout">
-      <aside className="sidebar" data-testid="sidebar">
+    <div className="layout">
+      <aside className="sidebar" role="complementary" aria-label="Thanh điều hướng">
         <div className="sidebar-brand">
-          <div className="brand-icon">PW</div>
+          <div className="brand-icon" title="Playwright UI Practice Lab">
+            PW
+          </div>
           <div>
             <div className="brand-title">Playwright UI</div>
             <div className="brand-sub">Practice Lab</div>
           </div>
         </div>
 
-        <nav className="sidebar-nav" data-testid="main-nav">
+        <nav className="sidebar-nav" aria-label="Menu chính">
           {navItems.map((item) => (
             <NavLink
               key={item.to}
@@ -33,7 +35,6 @@ export default function Layout() {
               className={({ isActive }) =>
                 `nav-link${isActive ? ' nav-link-active' : ''}`
               }
-              data-testid={item.testId}
             >
               {item.label}
             </NavLink>
@@ -45,7 +46,7 @@ export default function Layout() {
         </div>
       </aside>
 
-      <main className="main-content" data-testid="main-content">
+      <main className="main-content" role="main">
         <Outlet />
       </main>
     </div>

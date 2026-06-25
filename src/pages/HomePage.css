@@ -1,54 +1,20 @@
-.home-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 1rem;
-  margin-bottom: 1.5rem;
+.home-logo {
+  margin-top: 1rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 20px var(--accent-glow);
 }
 
-.home-card {
-  display: block;
-  padding: 1.25rem;
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  text-decoration: none;
-  transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
-  backdrop-filter: blur(12px);
-}
-
-.home-card:hover {
-  border-color: var(--border-hover);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 32px var(--accent-glow);
-  text-decoration: none;
-}
-
-.home-card h2 {
-  font-size: 1rem;
-  margin-bottom: 0.4rem;
-  background: linear-gradient(135deg, #c4b5fd, #67e8f9);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.home-card p {
-  font-size: 0.85rem;
-  color: var(--text-muted);
-  margin-bottom: 0.75rem;
-}
-
-.home-card-tag {
-  display: inline-block;
-  font-size: 0.7rem;
-  font-family: ui-monospace, monospace;
-  padding: 0.2rem 0.5rem;
-  border-radius: 6px;
-  background: rgba(6, 182, 212, 0.1);
-  color: #67e8f9;
-}
-
-.home-tip p {
+.locator-priority-list {
   margin: 0;
+  padding-left: 1.25rem;
   font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.locator-priority-list li {
+  margin-bottom: 0.35rem;
+}
+
+.locator-priority-list code {
+  font-size: 0.85em;
 }

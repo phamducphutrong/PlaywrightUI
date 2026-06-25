@@ -8,28 +8,16 @@ export class ModalPage extends BasePage {
   readonly openModalBtn: Locator
   readonly openConfirmBtn: Locator
   readonly modalDialog: Locator
-  readonly modalTitle: Locator
-  readonly modalCloseBtn: Locator
   readonly modalInput: Locator
-  readonly modalSaveBtn: Locator
   readonly confirmDialog: Locator
-  readonly confirmOkBtn: Locator
-  readonly confirmCancelBtn: Locator
-  readonly confirmResult: Locator
 
   constructor(page: Page) {
     super(page)
-    this.openModalBtn = page.getByTestId('open-modal-btn')
-    this.openConfirmBtn = page.getByTestId('open-confirm-btn')
-    this.modalDialog = page.getByTestId('modal-dialog')
-    this.modalTitle = page.getByTestId('modal-title')
-    this.modalCloseBtn = page.getByTestId('modal-close-btn')
-    this.modalInput = page.getByTestId('modal-input')
-    this.modalSaveBtn = page.getByTestId('modal-save-btn')
-    this.confirmDialog = page.getByTestId('confirm-dialog')
-    this.confirmOkBtn = page.getByTestId('confirm-ok-btn')
-    this.confirmCancelBtn = page.getByTestId('confirm-cancel-btn')
-    this.confirmResult = page.getByTestId('confirm-result')
+    this.openModalBtn = page.getByRole('button', { name: 'Mở Modal' })
+    this.openConfirmBtn = page.getByRole('button', { name: 'Mở Confirm Dialog' })
+    this.modalDialog = page.getByRole('dialog')
+    this.modalInput = page.getByLabel('Ghi chú')
+    this.confirmDialog = page.getByRole('alertdialog')
   }
 
   async open() {
@@ -41,7 +29,7 @@ export class ModalPage extends BasePage {
   }
 
   async closeModal() {
-    await this.modalCloseBtn.click()
+    await this.page.getByRole('button', { name: 'Đóng modal' }).click()
   }
 
   async openConfirm() {
@@ -49,21 +37,23 @@ export class ModalPage extends BasePage {
   }
 
   async confirmDelete() {
-    await this.confirmOkBtn.click()
+    await this.confirmDialog.getByRole('button', { name: 'Xóa' }).click()
   }
 
   async cancelConfirm() {
-    await this.confirmCancelBtn.click()
+    await this.confirmDialog.getByRole('button', { name: 'Hủy' }).click()
   }
 
   async fillModalNote(note = alerts.modalNote) {
     await this.modalInput.fill(note)
-    await this.modalSaveBtn.click()
+    await this.modalDialog.getByRole('button', { name: 'Lưu' }).click()
   }
 
   async expectModalVisible() {
     await expect(this.modalDialog).toBeVisible()
-    await expect(this.modalTitle).toHaveText('Thông tin chi tiết')
+    await expect(
+      this.modalDialog.getByRole('heading', { name: 'Thông tin chi tiết' })
+    ).toBeVisible()
   }
 
   async expectModalHidden() {
@@ -72,13 +62,16 @@ export class ModalPage extends BasePage {
 
   async expectConfirmVisible() {
     await expect(this.confirmDialog).toBeVisible()
+    await expect(
+      this.confirmDialog.getByRole('heading', { name: 'Xác nhận xóa' })
+    ).toBeVisible()
   }
 
   async expectConfirmDeleted() {
-    await expect(this.confirmResult).toHaveText(messages.confirmDeleted)
+    await expect(this.page.getByText(messages.confirmDeleted)).toBeVisible()
   }
 
   async expectConfirmCancelled() {
-    await expect(this.confirmResult).toHaveText(messages.confirmCancelled)
+    await expect(this.page.getByText(messages.confirmCancelled)).toBeVisible()
   }
 }

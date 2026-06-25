@@ -5,24 +5,31 @@ test.describe('Form Controls', () => {
     await page.goto('/forms')
   })
 
-  test('điền và submit form', async ({ page }) => {
-    await page.getByTestId('full-name-input').fill('Nguyễn Văn Test')
-    await page.getByTestId('email-input').fill('test@example.com')
-    await page.getByTestId('bio-textarea').fill('Tôi đang học Playwright')
-    await page.getByTestId('country-select').selectOption('vn')
-    await page.getByTestId('skill-javascript').check()
-    await page.getByTestId('skill-playwright').check()
-    await page.getByTestId('gender-nam').check()
-    await page.getByTestId('plan-pro').check()
+  test('điền và submit form — getByLabel + getByRole', async ({ page }) => {
+    // ② getByLabel
+    await page.getByLabel('Họ và tên').fill('Nguyễn Văn Test')
+    await page.getByLabel('Email').fill('test@example.com')
 
-    await page.getByTestId('form-submit').click()
+    // ③ getByPlaceholder — textarea không cần label riêng nếu đã có, nhưng có placeholder
+    await page.getByPlaceholder('Viết vài dòng về bản thân...').fill('Tôi đang học Playwright')
 
-    await expect(page.getByTestId('form-success')).toBeVisible()
-    await expect(page.getByTestId('form-success')).toContainText('Nguyễn Văn Test')
+    await page.getByLabel('Quốc gia').selectOption('vn')
+
+    // ① getByRole — checkbox & radio
+    await page.getByRole('checkbox', { name: 'JavaScript' }).check()
+    await page.getByRole('checkbox', { name: 'Playwright' }).check()
+    await page.getByRole('radio', { name: 'Nam' }).check()
+    await page.getByRole('radio', { name: 'Pro' }).check()
+
+    await page.getByRole('button', { name: 'Gửi form' }).click()
+
+    // ① getByRole status
+    await expect(page.getByRole('status')).toBeVisible()
+    await expect(page.getByRole('status')).toContainText('Nguyễn Văn Test')
   })
 
-  test('chọn quốc gia từ dropdown', async ({ page }) => {
+  test('chọn quốc gia — getByLabel', async ({ page }) => {
     await page.getByLabel('Quốc gia').selectOption('jp')
-    await expect(page.getByTestId('country-select')).toHaveValue('jp')
+    await expect(page.getByLabel('Quốc gia')).toHaveValue('jp')
   })
 })

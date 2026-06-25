@@ -5,22 +5,26 @@ test.describe('Alerts', () => {
     await page.goto('/alerts')
   })
 
-  test('hiển thị inline success alert', async ({ page }) => {
-    await page.getByTestId('show-success').click()
-    await expect(page.getByTestId('inline-alert-success')).toBeVisible()
-    await expect(page.getByTestId('inline-alert-success')).toContainText('thành công')
+  test('inline success — getByRole(button) + getByRole(alert)', async ({ page }) => {
+    await page.getByRole('button', { name: 'Success Alert' }).click()
+
+    const alert = page.getByRole('alert')
+    await expect(alert).toBeVisible()
+    await expect(alert).toContainText('thành công')
   })
 
-  test('đóng inline alert', async ({ page }) => {
-    await page.getByTestId('show-error').click()
-    await expect(page.getByTestId('inline-alert-error')).toBeVisible()
+  test('đóng inline alert — getByRole', async ({ page }) => {
+    await page.getByRole('button', { name: 'Error Alert' }).click()
+    await expect(page.getByRole('alert')).toBeVisible()
 
-    await page.getByTestId('dismiss-inline-alert').click()
-    await expect(page.getByTestId('inline-alert-error')).not.toBeVisible()
+    await page.getByRole('button', { name: 'Đóng thông báo' }).click()
+    await expect(page.getByRole('alert')).not.toBeVisible()
   })
 
-  test('hiển thị toast notification', async ({ page }) => {
-    await page.getByTestId('show-toast-success').click()
+  test('toast notification — getByText', async ({ page }) => {
+    await page.getByRole('button', { name: 'Hiện Toast Success' }).click()
+
+    // ④ getByText — toast message
     await expect(page.getByText('Toast: Lưu thành công!')).toBeVisible()
   })
 })

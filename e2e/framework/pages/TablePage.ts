@@ -7,20 +7,16 @@ export class TablePage extends BasePage {
   readonly table: Locator
   readonly searchInput: Locator
   readonly countLabel: Locator
-  readonly pageInfo: Locator
-  readonly prevPageBtn: Locator
-  readonly nextPageBtn: Locator
+  readonly pagination: Locator
   readonly sortNameBtn: Locator
 
   constructor(page: Page) {
     super(page)
-    this.table = page.getByTestId('users-table')
-    this.searchInput = page.getByTestId('table-search')
-    this.countLabel = page.getByTestId('table-count')
-    this.pageInfo = page.getByTestId('page-info')
-    this.prevPageBtn = page.getByTestId('prev-page')
-    this.nextPageBtn = page.getByTestId('next-page')
-    this.sortNameBtn = page.getByTestId('sort-name')
+    this.table = page.getByRole('table', { name: 'Danh sách người dùng' })
+    this.searchInput = page.getByPlaceholder('Tìm theo tên, email, role...')
+    this.countLabel = page.locator('.table-count')
+    this.pagination = page.getByRole('navigation', { name: 'Phân trang bảng' })
+    this.sortNameBtn = page.getByRole('button', { name: 'Sắp xếp theo tên' })
   }
 
   async open() {
@@ -36,37 +32,42 @@ export class TablePage extends BasePage {
   }
 
   async goNextPage() {
-    await this.nextPageBtn.click()
+    await this.pagination.getByRole('button', { name: 'Sau →' }).click()
   }
 
   async goPrevPage() {
-    await this.prevPageBtn.click()
+    await this.pagination.getByRole('button', { name: '← Trước' }).click()
   }
 
-  firstRow() {
-    return this.table.locator('tbody tr').first()
-  }
-
-  tableRow(id: number) {
-    return this.page.getByTestId(`table-row-${id}`)
+  firstDataRow() {
+    return this.table.getByRole('row').nth(1)
   }
 
   async expectTableLoaded() {
     await expect(this.table).toBeVisible()
-    await expect(this.table.locator('tbody tr')).toHaveCount(tableData.pageSize)
+    await expect(this.table.getByRole('row')).toHaveCount(tableData.pageSize + 1)
     await expect(this.countLabel).toContainText(String(tableData.totalUsers))
   }
 
   async expectSearchResult() {
     await expect(this.countLabel).toContainText(String(tableData.searchResultCount))
-    await expect(this.tableRow(tableData.searchResultId)).toBeVisible()
+    await expect(
+      this.page.getByRole('cell', { name: 'Nguyễn Văn A' })
+    ).toBeVisible()
   }
 
   async expectPageInfo(page: number) {
-    await expect(this.pageInfo).toHaveText(`Trang ${page} / ${tableData.totalPages}`)
+    await expect(this.pagination).toContainText(`Trang ${page} / ${tableData.totalPages}`)
   }
 
   async expectFirstRowContains(name: string) {
-    await expect(this.firstRow()).toContainText(name)
+    await expect(this.firstDataRow()).toContainText(name)
+  }
+
+  async expectFirstNameByXPath(name: string) {
+    const cell = this.page.locator(
+      'xpath=//table[@aria-label="Danh sách người dùng"]//tbody/tr[1]/td[2]'
+    )
+    await expect(cell).toHaveText(name)
   }
 }

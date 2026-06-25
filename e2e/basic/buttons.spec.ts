@@ -5,30 +5,41 @@ test.describe('Buttons', () => {
     await page.goto('/buttons')
   })
 
-  test('đếm số lần click', async ({ page }) => {
-    const primaryBtn = page.getByTestId('btn-primary')
+  test('đếm số lần click — getByRole(button) + getByRole(region)', async ({ page }) => {
+    const counterRegion = page.getByRole('region', { name: 'Click Counter' })
+    const primaryBtn = page.getByRole('button', { name: 'Primary Button' })
 
     await primaryBtn.click()
     await primaryBtn.click()
     await primaryBtn.click()
 
-    await expect(page.getByTestId('click-count')).toHaveText('3')
+    // ④ getByText trong region
+    await expect(counterRegion.getByText('3', { exact: true })).toBeVisible()
   })
 
-  test('reset counter', async ({ page }) => {
-    await page.getByTestId('btn-primary').click()
-    await page.getByTestId('btn-reset').click()
+  test('reset counter — getByRole', async ({ page }) => {
+    await page.getByRole('button', { name: 'Primary Button' }).click()
+    await page.getByRole('button', { name: 'Reset' }).click()
 
-    await expect(page.getByTestId('click-count')).toHaveText('0')
+    await expect(
+      page.getByRole('region', { name: 'Click Counter' }).getByText('0', { exact: true })
+    ).toBeVisible()
   })
 
-  test('nút disabled không click được', async ({ page }) => {
-    await expect(page.getByTestId('btn-disabled')).toBeDisabled()
+  test('nút disabled — getByRole', async ({ page }) => {
+    await expect(page.getByRole('button', { name: 'Disabled Button' })).toBeDisabled()
   })
 
-  test('async action hoàn tất', async ({ page }) => {
-    await page.getByTestId('btn-async').click()
-    await expect(page.getByTestId('btn-async')).toHaveText('Đang xử lý...')
-    await expect(page.getByTestId('last-action')).toHaveText('Xử lý hoàn tất!', { timeout: 5000 })
+  test('async action — getByRole + getByText', async ({ page }) => {
+    await page.getByRole('button', { name: 'Async Action' }).click()
+    await expect(page.getByRole('button', { name: 'Đang xử lý...' })).toBeVisible()
+    await expect(page.getByText('Xử lý hoàn tất!')).toBeVisible({ timeout: 5000 })
+  })
+
+  test('external link — getByTitle', async ({ page }) => {
+    // ⑥ getByTitle — link có tooltip
+    const docsLink = page.getByTitle('Mở tài liệu Playwright trong tab mới')
+    await expect(docsLink).toBeVisible()
+    await expect(docsLink).toHaveAttribute('href', 'https://playwright.dev')
   })
 })

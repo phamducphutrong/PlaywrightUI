@@ -47,7 +47,7 @@ export default function TodoPage() {
   const remaining = todos.filter((t) => !t.done).length
 
   return (
-    <div className="page" data-testid="todo-page">
+    <div className="page">
       <header className="page-header">
         <h1>Todo List</h1>
         <p>Bài tập CRUD cơ bản — thêm, hoàn thành, xóa, lọc</p>
@@ -59,61 +59,51 @@ export default function TodoPage() {
             type="text"
             className="input"
             placeholder="Thêm công việc mới..."
+            aria-label="Nội dung công việc mới"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && addTodo()}
-            data-testid="todo-input"
           />
-          <button
-            type="button"
-            className="btn btn-primary"
-            onClick={addTodo}
-            data-testid="todo-add-btn"
-          >
+          <button type="button" className="btn btn-primary" onClick={addTodo}>
             Thêm
           </button>
         </div>
 
-        <div className="todo-filters" data-testid="todo-filters">
+        <div className="todo-filters" role="group" aria-label="Lọc công việc">
           {(['all', 'active', 'done'] as const).map((f) => (
             <button
               key={f}
               type="button"
               className={`btn btn-sm ${filter === f ? 'btn-primary' : 'btn-ghost'}`}
               onClick={() => setFilter(f)}
-              data-testid={`filter-${f}`}
             >
               {f === 'all' ? 'Tất cả' : f === 'active' ? 'Chưa xong' : 'Đã xong'}
             </button>
           ))}
         </div>
 
-        <ul className="todo-list" data-testid="todo-list">
+        <ul className="todo-list" aria-label="Danh sách công việc">
           {filtered.length === 0 ? (
-            <li className="todo-empty" data-testid="todo-empty">
-              Không có công việc nào
-            </li>
+            <li className="todo-empty">Không có công việc nào</li>
           ) : (
             filtered.map((todo) => (
               <li
                 key={todo.id}
                 className={`todo-item${todo.done ? ' todo-done' : ''}`}
-                data-testid={`todo-item-${todo.id}`}
               >
                 <label className="todo-label">
                   <input
                     type="checkbox"
                     checked={todo.done}
                     onChange={() => toggleTodo(todo.id)}
-                    data-testid={`todo-check-${todo.id}`}
                   />
-                  <span data-testid={`todo-text-${todo.id}`}>{todo.text}</span>
+                  <span>{todo.text}</span>
                 </label>
                 <button
                   type="button"
                   className="btn btn-sm btn-danger"
                   onClick={() => deleteTodo(todo.id)}
-                  data-testid={`todo-delete-${todo.id}`}
+                  aria-label={`Xóa công việc: ${todo.text}`}
                 >
                   Xóa
                 </button>
@@ -122,7 +112,7 @@ export default function TodoPage() {
           )}
         </ul>
 
-        <p className="todo-remaining" data-testid="todo-remaining">
+        <p className="todo-remaining" aria-live="polite">
           Còn lại: <strong>{remaining}</strong> công việc
         </p>
       </div>

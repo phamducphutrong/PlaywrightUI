@@ -8,3 +8,9 @@ export const initialTodos = {
   activeId: 2,
   deletableId: 3,
 } as const
+
+export const todoTexts = {
+  active: 'Viết test cho form login',
+  deletable: 'Thực hành locator strategies',
+  completed: 'Học Playwright cơ bản',
+} as const

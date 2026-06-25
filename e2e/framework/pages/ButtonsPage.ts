@@ -8,17 +8,17 @@ export class ButtonsPage extends BasePage {
   readonly resetBtn: Locator
   readonly disabledBtn: Locator
   readonly asyncBtn: Locator
-  readonly clickCount: Locator
-  readonly lastAction: Locator
+  readonly counterRegion: Locator
+  readonly docsLink: Locator
 
   constructor(page: Page) {
     super(page)
-    this.primaryBtn = page.getByTestId('btn-primary')
-    this.resetBtn = page.getByTestId('btn-reset')
-    this.disabledBtn = page.getByTestId('btn-disabled')
-    this.asyncBtn = page.getByTestId('btn-async')
-    this.clickCount = page.getByTestId('click-count')
-    this.lastAction = page.getByTestId('last-action')
+    this.primaryBtn = page.getByRole('button', { name: 'Primary Button' })
+    this.resetBtn = page.getByRole('button', { name: 'Reset' })
+    this.disabledBtn = page.getByRole('button', { name: 'Disabled Button' })
+    this.asyncBtn = page.getByRole('button', { name: 'Async Action' })
+    this.counterRegion = page.getByRole('region', { name: 'Click Counter' })
+    this.docsLink = page.getByTitle('Mở tài liệu Playwright trong tab mới')
   }
 
   async open() {
@@ -40,7 +40,7 @@ export class ButtonsPage extends BasePage {
   }
 
   async expectClickCount(count: string) {
-    await expect(this.clickCount).toHaveText(count)
+    await expect(this.counterRegion.getByText(count, { exact: true })).toBeVisible()
   }
 
   async expectDisabled() {
@@ -48,7 +48,7 @@ export class ButtonsPage extends BasePage {
   }
 
   async expectAsyncComplete() {
-    await expect(this.asyncBtn).toHaveText('Đang xử lý...')
-    await expect(this.lastAction).toHaveText(messages.asyncComplete, { timeout: 5000 })
+    await expect(this.page.getByRole('button', { name: 'Đang xử lý...' })).toBeVisible()
+    await expect(this.page.getByText(messages.asyncComplete)).toBeVisible({ timeout: 5000 })
   }
 }

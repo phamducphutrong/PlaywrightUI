@@ -12,18 +12,21 @@ export class HomePage extends BasePage {
   }
 
   async openLoginCard() {
-    await this.page.getByTestId('card-login').click()
+    await this.page.getByRole('link', { name: 'Đăng nhập Form login' }).click()
   }
 
   async expectLoaded() {
-    await expect(this.page.getByTestId('home-title')).toHaveText('Playwright UI Practice Lab')
-    await expect(this.sidebar).toBeVisible()
-    await expect(this.navLink('nav-login')).toBeVisible()
-    await expect(this.navLink('nav-forms')).toBeVisible()
+    await expect(
+      this.page.getByRole('heading', { name: 'Playwright UI Practice Lab', level: 1 })
+    ).toBeVisible()
+    await expect(this.mainNav).toBeVisible()
+    await expect(this.navLink('Đăng nhập')).toBeVisible()
+    await expect(this.navLink('Form')).toBeVisible()
+    await expect(this.page.getByAltText('Logo Playwright')).toBeVisible()
   }
 
   async expectNavigatedToLogin() {
     await expect(this.page).toHaveURL(routes.login)
-    await expect(this.page.getByTestId('login-form')).toBeVisible()
+    await expect(this.page.getByRole('form', { name: 'Form đăng nhập' })).toBeVisible()
   }
 }

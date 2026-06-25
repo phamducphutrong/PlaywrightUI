@@ -9,16 +9,14 @@ export class FormsPage extends BasePage {
   readonly bioTextarea: Locator
   readonly countrySelect: Locator
   readonly submitBtn: Locator
-  readonly successMsg: Locator
 
   constructor(page: Page) {
     super(page)
-    this.fullNameInput = page.getByTestId('full-name-input')
-    this.emailInput = page.getByTestId('email-input')
-    this.bioTextarea = page.getByTestId('bio-textarea')
-    this.countrySelect = page.getByTestId('country-select')
-    this.submitBtn = page.getByTestId('form-submit')
-    this.successMsg = page.getByTestId('form-success')
+    this.fullNameInput = page.getByLabel('Họ và tên')
+    this.emailInput = page.getByLabel('Email')
+    this.bioTextarea = page.getByPlaceholder('Viết vài dòng về bản thân...')
+    this.countrySelect = page.getByLabel('Quốc gia')
+    this.submitBtn = page.getByRole('button', { name: 'Gửi form' })
   }
 
   async open() {
@@ -32,11 +30,15 @@ export class FormsPage extends BasePage {
     await this.countrySelect.selectOption(data.country)
 
     for (const skill of data.skills) {
-      await this.page.getByTestId(`skill-${skill}`).check()
+      const label = skill.charAt(0).toUpperCase() + skill.slice(1)
+      await this.page.getByRole('checkbox', { name: label }).check()
     }
 
-    await this.page.getByTestId(`gender-${data.gender}`).check()
-    await this.page.getByTestId(`plan-${data.plan}`).check()
+    const genderLabel = data.gender === 'nam' ? 'Nam' : data.gender
+    await this.page.getByRole('radio', { name: genderLabel }).check()
+
+    const planLabel = data.plan === 'pro' ? 'Pro' : data.plan === 'free' ? 'Miễn phí' : 'Enterprise'
+    await this.page.getByRole('radio', { name: planLabel }).check()
   }
 
   async submit() {
@@ -44,12 +46,12 @@ export class FormsPage extends BasePage {
   }
 
   async selectCountry(value: string) {
-    await this.page.getByLabel('Quốc gia').selectOption(value)
+    await this.countrySelect.selectOption(value)
   }
 
   async expectSubmitSuccess(name = registrationForm.fullName) {
-    await expect(this.successMsg).toBeVisible()
-    await expect(this.successMsg).toContainText(name)
+    await expect(this.page.getByRole('status')).toBeVisible()
+    await expect(this.page.getByRole('status')).toContainText(name)
   }
 
   async expectCountrySelected(value = countries.japan) {

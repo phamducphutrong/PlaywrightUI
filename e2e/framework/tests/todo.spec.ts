@@ -1,5 +1,5 @@
 import { test } from '../fixtures/test-fixtures'
-import { sampleTodo, initialTodos } from '../data/todos'
+import { sampleTodo, todoTexts } from '../data/todos'
 
 test.describe('Todo List', () => {
   test.beforeEach(async ({ todoPage }) => {
@@ -7,23 +7,23 @@ test.describe('Todo List', () => {
   })
 
   test('thêm todo mới', async ({ todoPage }) => {
-    await todoPage.addTodo(sampleTodo.text)
+    await todoPage.addSampleTodo()
     await todoPage.expectTodoVisible(sampleTodo.text)
-    await todoPage.expectRemaining(sampleTodo.remainingAfterAdd)
+    await todoPage.expectSampleRemaining()
   })
 
   test('đánh dấu hoàn thành todo', async ({ todoPage }) => {
-    await todoPage.toggleTodo(initialTodos.activeId)
-    await todoPage.expectTodoCompleted(initialTodos.activeId)
+    await todoPage.toggleTodo(todoTexts.active)
+    await todoPage.expectTodoCompleted(todoTexts.active)
   })
 
   test('xóa todo', async ({ todoPage }) => {
-    await todoPage.deleteTodo(initialTodos.deletableId)
-    await todoPage.expectTodoHidden(initialTodos.deletableId)
+    await todoPage.deleteTodo(todoTexts.deletable)
+    await todoPage.expectTodoHidden(todoTexts.deletable)
   })
 
   test('lọc todo đã hoàn thành', async ({ todoPage }) => {
-    await todoPage.filterBy('done')
-    await todoPage.expectOnlyCompletedVisible()
+    await todoPage.filterBy('Đã xong')
+    await todoPage.expectOnlyCompletedVisible(todoTexts.completed, todoTexts.active)
   })
 })

@@ -31,17 +31,16 @@ export default function LoginPage() {
 
   if (loggedIn) {
     return (
-      <div className="page" data-testid="login-success-page">
+      <div className="page" data-testid="user-session">
         <div className="card" style={{ textAlign: 'center' }}>
-          <h1 data-testid="login-success-title">Đăng nhập thành công!</h1>
-          <p data-testid="login-welcome-msg">
+          <h1>Đăng nhập thành công!</h1>
+          <p>
             Xin chào, <strong>{username}</strong> 👋
           </p>
           <div className="row" style={{ justifyContent: 'center', marginTop: '1.5rem' }}>
             <button
               type="button"
               className="btn btn-primary"
-              data-testid="go-home-btn"
               onClick={() => navigate('/')}
             >
               Về trang chủ
@@ -49,7 +48,6 @@ export default function LoginPage() {
             <button
               type="button"
               className="btn btn-secondary"
-              data-testid="logout-btn"
               onClick={() => {
                 setLoggedIn(false)
                 setUsername('')
@@ -65,7 +63,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="page" data-testid="login-page">
+    <div className="page">
       <header className="page-header">
         <h1>Đăng nhập</h1>
         <p>
@@ -74,17 +72,17 @@ export default function LoginPage() {
       </header>
 
       <div className="card" style={{ maxWidth: 420 }}>
-        <form onSubmit={handleSubmit} data-testid="login-form" noValidate>
+        <form onSubmit={handleSubmit} aria-label="Form đăng nhập" noValidate>
           <div className="form-group">
             <label htmlFor="username">Tên đăng nhập</label>
             <input
               id="username"
+              name="username"
               type="text"
               className={`input${error ? ' input-error' : ''}`}
               placeholder="Nhập username"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              data-testid="username-input"
               autoComplete="username"
             />
           </div>
@@ -93,25 +91,25 @@ export default function LoginPage() {
             <label htmlFor="password">Mật khẩu</label>
             <input
               id="password"
+              name="password"
               type="password"
               className={`input${error ? ' input-error' : ''}`}
               placeholder="Nhập password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              data-testid="password-input"
               autoComplete="current-password"
             />
           </div>
 
           {error && (
-            <p className="error-msg" data-testid="login-error" role="alert">
+            <p className="error-msg" role="alert">
               {error}
             </p>
           )}
 
           <div className="form-group" style={{ marginTop: '1.25rem' }}>
             <label className="checkbox-label">
-              <input type="checkbox" data-testid="remember-me" />
+              <input type="checkbox" name="remember" />
               Ghi nhớ đăng nhập
             </label>
           </div>
@@ -121,7 +119,6 @@ export default function LoginPage() {
             className="btn btn-primary"
             style={{ width: '100%' }}
             disabled={loading}
-            data-testid="login-submit"
           >
             {loading ? 'Đang đăng nhập...' : 'Đăng nhập'}
           </button>

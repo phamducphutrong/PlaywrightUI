@@ -84,7 +84,7 @@ export default function TablePage() {
   }
 
   return (
-    <div className="page" data-testid="table-page">
+    <div className="page">
       <header className="page-header">
         <h1>Bảng dữ liệu</h1>
         <p>Tìm kiếm, sắp xếp cột và phân trang</p>
@@ -96,75 +96,73 @@ export default function TablePage() {
             type="search"
             className="input table-search"
             placeholder="Tìm theo tên, email, role..."
+            aria-label="Tìm kiếm người dùng"
             value={search}
             onChange={(e) => {
               setSearch(e.target.value)
               setPage(1)
             }}
-            data-testid="table-search"
           />
-          <span className="table-count" data-testid="table-count">
+          <span className="table-count" aria-live="polite">
             {filtered.length} kết quả
           </span>
         </div>
 
         <div className="table-wrapper">
-          <table className="data-table" data-testid="users-table">
+          <table className="data-table" aria-label="Danh sách người dùng">
+            <caption className="sr-only">Bảng người dùng hệ thống</caption>
             <thead>
               <tr>
-                <th>ID</th>
-                <th>
+                <th scope="col">ID</th>
+                <th scope="col">
                   <button
                     type="button"
                     className="sort-btn"
                     onClick={() => handleSort('name')}
-                    data-testid="sort-name"
+                    aria-label="Sắp xếp theo tên"
                   >
                     Tên{sortIndicator('name')}
                   </button>
                 </th>
-                <th>
+                <th scope="col">
                   <button
                     type="button"
                     className="sort-btn"
                     onClick={() => handleSort('email')}
-                    data-testid="sort-email"
+                    aria-label="Sắp xếp theo email"
                   >
                     Email{sortIndicator('email')}
                   </button>
                 </th>
-                <th>
+                <th scope="col">
                   <button
                     type="button"
                     className="sort-btn"
                     onClick={() => handleSort('role')}
-                    data-testid="sort-role"
+                    aria-label="Sắp xếp theo role"
                   >
                     Role{sortIndicator('role')}
                   </button>
                 </th>
-                <th>Trạng thái</th>
+                <th scope="col">Trạng thái</th>
               </tr>
             </thead>
             <tbody>
               {paged.length === 0 ? (
-                <tr data-testid="table-empty">
+                <tr>
                   <td colSpan={5} style={{ textAlign: 'center', padding: '2rem' }}>
                     Không tìm thấy dữ liệu
                   </td>
                 </tr>
               ) : (
                 paged.map((user) => (
-                  <tr key={user.id} data-testid={`table-row-${user.id}`}>
+                  <tr key={user.id}>
                     <td>{user.id}</td>
                     <td>{user.name}</td>
                     <td>{user.email}</td>
                     <td>{user.role}</td>
                     <td>
-                      <span
-                        className={`badge ${statusBadge[user.status]}`}
-                        data-testid={`status-${user.id}`}
-                      >
+                      <span className={`badge ${statusBadge[user.status]}`}>
                         {statusLabel[user.status]}
                       </span>
                     </td>
@@ -175,17 +173,16 @@ export default function TablePage() {
           </table>
         </div>
 
-        <div className="pagination" data-testid="pagination">
+        <nav className="pagination" aria-label="Phân trang bảng">
           <button
             type="button"
             className="btn btn-sm btn-ghost"
             disabled={page <= 1}
             onClick={() => setPage((p) => p - 1)}
-            data-testid="prev-page"
           >
             ← Trước
           </button>
-          <span data-testid="page-info">
+          <span>
             Trang {page} / {totalPages}
           </span>
           <button
@@ -193,11 +190,10 @@ export default function TablePage() {
             className="btn btn-sm btn-ghost"
             disabled={page >= totalPages}
             onClick={() => setPage((p) => p + 1)}
-            data-testid="next-page"
           >
             Sau →
           </button>
-        </div>
+        </nav>
       </div>
     </div>
   )

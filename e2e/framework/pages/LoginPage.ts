@@ -7,22 +7,14 @@ export class LoginPage extends BasePage {
   readonly usernameInput: Locator
   readonly passwordInput: Locator
   readonly submitBtn: Locator
-  readonly errorMsg: Locator
-  readonly successTitle: Locator
-  readonly welcomeMsg: Locator
-  readonly logoutBtn: Locator
   readonly loginForm: Locator
 
   constructor(page: Page) {
     super(page)
-    this.usernameInput = page.getByTestId('username-input')
-    this.passwordInput = page.getByTestId('password-input')
-    this.submitBtn = page.getByTestId('login-submit')
-    this.errorMsg = page.getByTestId('login-error')
-    this.successTitle = page.getByTestId('login-success-title')
-    this.welcomeMsg = page.getByTestId('login-welcome-msg')
-    this.logoutBtn = page.getByTestId('logout-btn')
-    this.loginForm = page.getByTestId('login-form')
+    this.usernameInput = page.getByLabel('Tên đăng nhập')
+    this.passwordInput = page.getByLabel('Mật khẩu')
+    this.submitBtn = page.getByRole('button', { name: 'Đăng nhập' })
+    this.loginForm = page.getByRole('form', { name: 'Form đăng nhập' })
   }
 
   async open() {
@@ -35,6 +27,12 @@ export class LoginPage extends BasePage {
     await this.submitBtn.click()
   }
 
+  async loginWithPlaceholder(username: string, password: string) {
+    await this.page.getByPlaceholder('Nhập username').fill(username)
+    await this.page.getByPlaceholder('Nhập password').fill(password)
+    await this.submitBtn.click()
+  }
+
   async loginAsValidUser() {
     await this.login(users.valid.username, users.valid.password)
   }
@@ -44,20 +42,26 @@ export class LoginPage extends BasePage {
   }
 
   async logout() {
-    await this.logoutBtn.click()
+    await this.page.getByRole('button', { name: 'Đăng xuất' }).click()
   }
 
   async expectLoginSuccess(username = users.valid.username) {
-    await expect(this.successTitle).toBeVisible({ timeout: 5000 })
-    await expect(this.welcomeMsg).toContainText(username)
+    await expect(
+      this.page.getByRole('heading', { name: 'Đăng nhập thành công!' })
+    ).toBeVisible({ timeout: 5000 })
+    await expect(this.page.getByText(new RegExp(`Xin chào.*${username}`))).toBeVisible()
   }
 
   async expectLoginError() {
-    await expect(this.errorMsg).toBeVisible({ timeout: 5000 })
-    await expect(this.errorMsg).toHaveText(messages.loginError)
+    await expect(this.page.getByRole('alert')).toBeVisible({ timeout: 5000 })
+    await expect(this.page.getByRole('alert')).toHaveText(messages.loginError)
   }
 
   async expectLoginFormVisible() {
     await expect(this.loginForm).toBeVisible()
+  }
+
+  async expectSessionByTestId() {
+    await expect(this.page.getByTestId('user-session')).toBeVisible({ timeout: 5000 })
   }
 }

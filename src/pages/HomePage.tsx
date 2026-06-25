@@ -7,72 +7,67 @@ const sections = [
     to: '/login',
     title: 'Đăng nhập',
     desc: 'Form login, validation, redirect sau khi đăng nhập thành công',
-    testId: 'card-login',
-    tag: 'getByRole, fill, click',
+    tag: 'getByRole, getByLabel',
   },
   {
     to: '/forms',
     title: 'Form Controls',
     desc: 'Input, textarea, select, checkbox, radio, date picker',
-    testId: 'card-forms',
-    tag: 'getByLabel, selectOption',
+    tag: 'getByLabel, getByPlaceholder',
   },
   {
     to: '/buttons',
     title: 'Buttons',
     desc: 'Click, double-click, disabled state, đếm số lần click',
-    testId: 'card-buttons',
-    tag: 'getByRole(button), click',
+    tag: 'getByRole(button)',
   },
   {
     to: '/todo',
     title: 'Todo List',
     desc: 'Thêm, xóa, đánh dấu hoàn thành — bài tập CRUD cơ bản',
-    testId: 'card-todo',
-    tag: 'locator, filter, expect',
+    tag: 'getByPlaceholder, getByText',
   },
   {
     to: '/table',
     title: 'Bảng dữ liệu',
     desc: 'Tìm kiếm, sắp xếp, phân trang',
-    testId: 'card-table',
-    tag: 'getByRole(row), sort',
+    tag: 'getByRole(table), CSS',
   },
   {
     to: '/modal',
     title: 'Modal & Dialog',
     desc: 'Mở/đóng modal, confirm dialog, overlay click',
-    testId: 'card-modal',
     tag: 'getByRole(dialog)',
   },
   {
     to: '/alerts',
     title: 'Alerts & Toast',
     desc: 'Thông báo success, warning, error',
-    testId: 'card-alerts',
-    tag: 'getByText, waitFor',
+    tag: 'getByText, getByRole(alert)',
   },
 ]
 
 export default function HomePage() {
   return (
-    <div className="page" data-testid="home-page">
+    <div className="page">
       <header className="page-header">
-        <h1 data-testid="home-title">Playwright UI Practice Lab</h1>
+        <h1>Playwright UI Practice Lab</h1>
         <p>
-          Ứng dụng React dùng để luyện viết test Playwright. Mỗi trang có các UI
-          element cơ bản với <code>data-testid</code> để dễ locate.
+          Ứng dụng React để luyện các chiến lược locator Playwright theo thứ tự ưu tiên:
+          role → label → placeholder → text → alt → title → testid → CSS → XPath.
         </p>
+        <img
+          src="/playwright-logo.svg"
+          alt="Logo Playwright"
+          className="home-logo"
+          width={48}
+          height={48}
+        />
       </header>
 
       <div className="home-grid">
         {sections.map((section) => (
-          <Link
-            key={section.to}
-            to={section.to}
-            className="home-card"
-            data-testid={section.testId}
-          >
+          <Link key={section.to} to={section.to} className="home-card">
             <h2>{section.title}</h2>
             <p>{section.desc}</p>
             <span className="home-card-tag">{section.tag}</span>
@@ -80,13 +75,19 @@ export default function HomePage() {
         ))}
       </div>
 
-      <div className="card home-tip" data-testid="home-tip">
-        <div className="card-title">Gợi ý cho học viên</div>
-        <p>
-          Dùng <code>page.getByTestId('...')</code> hoặc{' '}
-          <code>{`page.getByRole('button', { name: '...' })`}</code> để
-          tương tác với các element. Ưu tiên role và label trước, testid khi cần.
-        </p>
+      <div className="card home-tip">
+        <div className="card-title">Thứ tự ưu tiên locator</div>
+        <ol className="locator-priority-list">
+          <li><code>getByRole()</code> — tiêu chuẩn vàng</li>
+          <li><code>getByLabel()</code> — form có label</li>
+          <li><code>getByPlaceholder()</code> — khi không có label</li>
+          <li><code>getByText()</code> — theo văn bản hiển thị</li>
+          <li><code>getByAltText()</code> — hình ảnh</li>
+          <li><code>getByTitle()</code> — tooltip</li>
+          <li><code>getByTestId()</code> — khi dev bổ sung data-testid</li>
+          <li>CSS Selector — phương án dự phòng</li>
+          <li>XPath — phương án cuối cùng</li>
+        </ol>
       </div>
     </div>
   )

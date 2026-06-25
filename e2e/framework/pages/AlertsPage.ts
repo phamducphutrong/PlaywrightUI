@@ -7,14 +7,12 @@ export class AlertsPage extends BasePage {
   readonly showSuccessBtn: Locator
   readonly showErrorBtn: Locator
   readonly showToastSuccessBtn: Locator
-  readonly dismissBtn: Locator
 
   constructor(page: Page) {
     super(page)
-    this.showSuccessBtn = page.getByTestId('show-success')
-    this.showErrorBtn = page.getByTestId('show-error')
-    this.showToastSuccessBtn = page.getByTestId('show-toast-success')
-    this.dismissBtn = page.getByTestId('dismiss-inline-alert')
+    this.showSuccessBtn = page.getByRole('button', { name: 'Success Alert' })
+    this.showErrorBtn = page.getByRole('button', { name: 'Error Alert' })
+    this.showToastSuccessBtn = page.getByRole('button', { name: 'Hiện Toast Success' })
   }
 
   async open() {
@@ -34,21 +32,21 @@ export class AlertsPage extends BasePage {
   }
 
   async dismissInlineAlert() {
-    await this.dismissBtn.click()
+    await this.page.getByRole('button', { name: 'Đóng thông báo' }).click()
   }
 
   async expectInlineSuccessVisible() {
-    const alert = this.page.getByTestId('inline-alert-success')
+    const alert = this.page.getByRole('alert')
     await expect(alert).toBeVisible()
     await expect(alert).toContainText(alerts.inlineSuccessKeyword)
   }
 
   async expectInlineErrorVisible() {
-    await expect(this.page.getByTestId('inline-alert-error')).toBeVisible()
+    await expect(this.page.getByRole('alert')).toBeVisible()
   }
 
   async expectInlineErrorHidden() {
-    await expect(this.page.getByTestId('inline-alert-error')).not.toBeVisible()
+    await expect(this.page.getByRole('alert')).not.toBeVisible()
   }
 
   async expectToastVisible() {

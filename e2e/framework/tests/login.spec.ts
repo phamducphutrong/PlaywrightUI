@@ -5,19 +5,24 @@ test.describe('Đăng nhập', () => {
     await loginPage.open()
   })
 
-  test('đăng nhập thành công với credentials đúng', async ({ loginPage }) => {
+  test('đăng nhập thành công — getByLabel', async ({ loginPage }) => {
     await loginPage.loginAsValidUser()
     await loginPage.expectLoginSuccess()
   })
 
-  test('hiển thị lỗi khi sai mật khẩu', async ({ loginPage }) => {
+  test('đăng nhập bằng placeholder — getByPlaceholder', async ({ loginPage }) => {
+    await loginPage.loginWithPlaceholder('admin', 'password123')
+    await loginPage.expectLoginSuccess()
+  })
+
+  test('hiển thị lỗi khi sai mật khẩu — getByRole(alert)', async ({ loginPage }) => {
     await loginPage.loginAsInvalidUser()
     await loginPage.expectLoginError()
   })
 
-  test('đăng xuất sau khi đăng nhập', async ({ loginPage }) => {
+  test('phiên đăng nhập — getByTestId', async ({ loginPage }) => {
     await loginPage.loginAsValidUser()
-    await loginPage.expectLoginSuccess()
+    await loginPage.expectSessionByTestId()
     await loginPage.logout()
     await loginPage.expectLoginFormVisible()
   })
